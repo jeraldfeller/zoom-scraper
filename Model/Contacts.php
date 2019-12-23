@@ -11,6 +11,17 @@ class Contacts
     public $debug = TRUE;
     protected $db_pdo;
 
+    public function getContactCount($status){
+        $pdo = $this->getPdo();
+        $sql = 'SELECT count(*) as contactCount FROM `contacts` WHERE `completed` = '.$status;
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $pdo = null;
+
+        return $result;
+    }
+
     public function insertContact($analys, $firstName, $lastName, $middleName, $suffix, $company = '')
     {
         $pdo = $this->getPdo();
@@ -64,11 +75,27 @@ class Contacts
     }
 
     public function insertMeta($id, $individualId, $name, $organization, $position, $start, $end, $type){
+        if($this->checkMetaExists($id, $individualId, $name, $organization, $position, $start, $end, $type) == 0){
+            $pdo = $this->getPdo();
+            $sql = "INSERT INTO contact_metas SET contact_id = $id, individual_id = '$individualId', name = '$name', organization = '$organization', position = '$position', start = '$start', end = '$end', type = '$type'";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+            $pdo = null;
+        }
+    }
+
+    public function checkMetaExists($id, $individualId, $name, $organization, $position, $start, $end, $type){
         $pdo = $this->getPdo();
-        $sql = "INSERT INTO contact_metas SET contact_id = $id, individual_id = '$individualId', name = '$name', organization = '$organization', position = '$position', start = '$start', end = '$end', type = '$type'";
+        $sql = "SELECT * FROM contact_metas WHERE contact_id = $id AND individual_id = '$individualId' AND name = '$name' AND organization = '$organization' AND position = '$position' AND start = '$start' AND end = '$end' AND type = '$type'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
+        $result = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
         $pdo = null;
+
+        return count($result);
     }
 
     public function setUrl($id, $url, $contactId){
@@ -117,7 +144,7 @@ class Contacts
                 "sec-fetch-mode: navigate",
                 "sec-fetch-site: none",
                 "sec-fetch-user: ?1",
-                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
+                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
             ),
 //            CURLOPT_COOKIEFILE => 'cookie/cookies.txt',
 //            CURLOPT_COOKIEJAR => 'cookie/cookies.txt'
@@ -147,6 +174,44 @@ class Contacts
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "accept-encoding: gzip, deflate, br",
+                "accept-language: en-US,en;q=0.9",
+                "cookie: $cookie",
+                "sec-fetch-mode: navigate",
+                "sec-fetch-site: none",
+                "sec-fetch-user: ?1",
+                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
+            ),
+//            CURLOPT_COOKIEFILE => 'cookie/cookies.txt',
+//            CURLOPT_COOKIEJAR => 'cookie/cookies.txt'
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err . "\n";
+        } else {
+            return $response;
+        }
+    }
+
+
+    public function curlToProfilePost($url){
+        $curl = curl_init();
+        $cookie = $this->getCookie();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url.'?__cf_chl_jschl_tk__=2392460742ee62ee334c8155cd3de88c909e4332-1576759786-0-AdMOK0JFgKxrt9GKDAhvcJ1CTSTigbuFitJKLCTcFmr8E-YQYaexc6NStJ8weHYEksEqCp0vw7rZN_DltaNDUMrb1__GrG-MdDg6RztgrNg5zol6p2rfgDFtFNJvyPlV9WnAtyMgekmyc4OVe_MlRicH4gBTjEveakLR-2XPLchjDOSjEaDAE-0fG8EMHawk_2B-RRj2uYJfesw0hbsZBPrZNJgYZSRx9BmIef-sQT0flq2F77WfP5g5CNxyjxHu1z8h7SKpKmy9t7gRr4coR5boo3iACEh8IA6zXZNcTYWjeiysKmGasmcRlzUlSF1-I3QZVgQHvpP-ImchY-pEzXQ',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_HTTPHEADER => array(
                 "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "accept-encoding: gzip, deflate, br",

@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 require 'Model/config.php';
 require 'Model/Contacts.php';
 require 'simple_html_dom.php';
-$limit = 20;
+$limit = 25;
 $contactsClass = new Contacts();
 
 
@@ -22,6 +22,9 @@ foreach ($contacts as $contact) {
 //    echo $contactUrl . "\n";
     $htmlData = $contactsClass->curlToProfile($contactUrl);
     $html = str_get_html($htmlData);
+//    $file = fopen("test-3.html","w");
+//            echo fwrite($file,$htmlData);
+//            fclose($file);
     if ($html) {
         $challengeForm = $html->find('#challenge-form', 0);
         if(!$challengeForm){
@@ -117,8 +120,6 @@ foreach ($contacts as $contact) {
                                     }
 
                                     $contactsClass->insertMeta($contact['id'], $contact['contact_id'], $name, $organization, $position, $start, $end, $type);
-
-
                                 }
 //                                echo "$organization \n";
 //                                echo "$position \n";
@@ -135,6 +136,7 @@ foreach ($contacts as $contact) {
 //                    echo "--------------- \n";
                     $contactsClass->setStatus($contact['id'], 3);
                     $successCount++;
+                    echo "$individualId \n";
 
                 }
 
