@@ -1,9 +1,9 @@
 <?php
 ob_start();
 session_start();
-define('DB_USER', 'admin_test');
-define('DB_PWD', 'dfab7c358');
-define('DB_NAME', 'admin_test');
+define('DB_USER', 'admin_demo');
+define('DB_PWD', 'iOKviRk8RS');
+define('DB_NAME', 'admin_demo');
 define('DB_HOST', 'localhost');
 
 //define('DB_USER', 'root');

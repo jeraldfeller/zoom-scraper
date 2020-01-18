@@ -7,7 +7,7 @@ require 'simple_html_dom.php';
 $opt = getopt("a:c:");
 $action = trim($opt['a']);
 $cookie = 'ELQSITEVISITED=YES; __cfduid=d60a64f4c1992db7b4cc3b7a71ce040f21573539559; _ga=GA1.2.929437662.1573539565; _mkto_trk=id:197-OCJ-776&token:_mch-zoominfo.com-1573539565590-70811; _pxvid=5ec0cd41-0514-11ea-bece-7d7d231835a6; _gid=GA1.2.1530950322.1575868412; _pxhd=bf912bbd347ce00aa03a5899955b79457ed60852220599aed8dbc30897bab42e:5ec0cd41-0514-11ea-bece-7d7d231835a6; landing_page=https://www.zoominfo.com/people; ELQSITEVISITED=YES; cf_clearance=f6f1f572fd9d5b33b3df65e33a3b4c397b39f891-1575928056-0-150; amplitude_id_14ff67f4fc837e2a741f025afb61859czoominfo.com=eyJkZXZpY2VJZCI6IjZjYzBlNGM1LWZhYTYtNGI5MC1iMDUzLTI5NTU5OTI5OTNjNlIiLCJ1c2VySWQiOm51bGwsIm9wdE91dCI6ZmFsc2UsInNlc3Npb25JZCI6MTU3NTkyMzAzOTgzOSwibGFzdEV2ZW50VGltZSI6MTU3NTkyODkxOTE5MCwiZXZlbnRJZCI6MTQsImlkZW50aWZ5SWQiOjAsInNlcXVlbmNlTnVtYmVyIjoxNH0=; _px3=cd18e0755e39686f992da177c2411dd4dd1f86d30638c4da22a9f373e3c83dfe:gEYBoaLE04wYezSXXTXl125VG7J77KN2ozzwkQEJEB0/LqwfrRBKyPSJQbelhZ+4OIJ5o1jOivLDOZ5ScKWF1Q==:1000:mAMPFgmrGdLt56fNTVC5CRvLgR5/dp1g/GqsFpykba46URkHZ0EYhZkmxnrZKk9r+8OAvN6guSYj+djGnGj33+5O5oqWPRvYWoo4HOgPnQT4DhEy0eDAWgo2ShVf+PR+wKYMrc5oFPm80UaE9Y2m4SiQiqQsXwXqhYuCbRWQHac=';
-$limit = 25;
+$limit = 10;
 $contactsClass = new Contacts();
 
 
@@ -60,7 +60,7 @@ if($action == 'import'){
     $successCount = 0;
     foreach($contacts as $contact){
         $url = 'https://www.zoominfo.com/people/'.ucfirst($contact['first_name']).'/'.ucfirst($contact['last_name']);
-        $htmlData = $contactsClass->curlTo($url, $cookie);
+        $htmlData = $contactsClass->curlToProfile($url);
         $html = str_get_html($htmlData);
         if($html){
             $challengeForm = $html->find('#challenge-form', 0);
@@ -72,9 +72,9 @@ if($action == 'import'){
 //
 //            $htmlData = $contactsClass->curlTo($url);
 //            $html = str_get_html($htmlData);
-//            $file = fopen("test.html","w");
-//            echo fwrite($file,$output);
-//            fclose($file);
+//                $file = fopen("test-4.html","w");
+//                echo fwrite($file,$htmlData);
+//                fclose($file);
 
 //            echo $url . "\n";
                 if($html){

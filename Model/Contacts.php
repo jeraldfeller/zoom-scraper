@@ -144,7 +144,7 @@ class Contacts
                 "sec-fetch-mode: navigate",
                 "sec-fetch-site: none",
                 "sec-fetch-user: ?1",
-                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
+                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"
             ),
 //            CURLOPT_COOKIEFILE => 'cookie/cookies.txt',
 //            CURLOPT_COOKIEJAR => 'cookie/cookies.txt'
@@ -182,7 +182,7 @@ class Contacts
                 "sec-fetch-mode: navigate",
                 "sec-fetch-site: none",
                 "sec-fetch-user: ?1",
-                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
+                "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"
             ),
 //            CURLOPT_COOKIEFILE => 'cookie/cookies.txt',
 //            CURLOPT_COOKIEJAR => 'cookie/cookies.txt'
